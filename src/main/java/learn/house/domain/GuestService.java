@@ -16,26 +16,12 @@ public class GuestService {
     }
 
     public Guest findById(int id) throws DataException {
-        List<Guest> guests = repository.findAll().stream()
-                .filter(g -> g.getId() == id)
-                .toList();
 
-        if (guests.size() == 0) {
-            return null;
-        } else {
-            return guests.get(0);
-        }
+        return repository.findById(id);
     }
 
     public Guest findByEmail(String email) throws DataException {
-        List<Guest> guests = repository.findAll().stream()
-                .filter(g -> g.getEmail().equals(email))
-                .toList();
 
-        if (guests.size() == 0) {
-            return null;
-        } else {
-            return guests.get(0);
-        }
+        return repository.findByEmail(email);
     }
 }

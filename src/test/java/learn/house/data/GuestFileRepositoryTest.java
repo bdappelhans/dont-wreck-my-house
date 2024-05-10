@@ -32,4 +32,35 @@ class GuestFileRepositoryTest {
         List<Guest> all = repository.findAll();
         assertEquals(15, all.size());
     }
+
+    @Test
+    void shouldNotFindNonexistentId() throws DataException {
+        Guest result = repository.findById(100);
+
+        assertNull(result);
+    }
+
+    @Test
+    void shouldFindById() throws DataException {
+        Guest result = repository.findById(13);
+
+        assertNotNull(result);
+        assertEquals(13, result.getId());
+        assertEquals("amountc@ehow.com", result.getEmail());
+    }
+
+    @Test
+    void shouldNotFindNonExistentGuestEmail() throws DataException {
+        Guest result = repository.findByEmail("nonexistentemail@yahoo.com");
+        assertNull(result);
+    }
+
+    @Test
+    void shouldFindByEmail() throws DataException {
+        Guest result = repository.findByEmail("amountc@ehow.com");
+
+        assertNotNull(result);
+        assertEquals(13, result.getId());
+        assertEquals("Mount", result.getLastName());
+    }
 }

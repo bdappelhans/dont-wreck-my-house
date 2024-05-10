@@ -38,6 +38,32 @@ public class GuestFileRepository implements GuestRepository {
         return all;
     }
 
+    @Override
+    public Guest findById(int id) throws DataException {
+        List<Guest> guests = findAll().stream()
+                .filter(g -> g.getId() == id)
+                .toList();
+
+        if (guests.size() == 0) {
+            return null;
+        } else {
+            return guests.get(0);
+        }
+    }
+
+    @Override
+    public Guest findByEmail(String email) throws DataException {
+        List<Guest> guests = findAll().stream()
+                .filter(g -> g.getEmail().equals(email))
+                .toList();
+
+        if (guests.size() == 0) {
+            return null;
+        } else {
+            return guests.get(0);
+        }
+    }
+
     private Guest deserialize(String[] fields) {
         Guest result = new Guest();
         result.setId(Integer.parseInt(fields[0]));

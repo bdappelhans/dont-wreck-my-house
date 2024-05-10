@@ -23,4 +23,26 @@ public class GuestRepositoryDouble implements GuestRepository {
     public List<Guest> findAll() throws DataException {
         return guests;
     }
+
+    @Override
+    public Guest findById(int id) throws DataException {
+        if (id == 1) {
+            return guestOne;
+        } else if (id == 2) {
+            return guestTwo;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Guest findByEmail(String email) throws DataException {
+        if (email.equals(guestOne.getEmail())) {
+            return guestOne;
+        } else if (email.equals(guestTwo.getEmail())) {
+            return guestTwo;
+        } else {
+            return null;
+        }
+    }
 }
