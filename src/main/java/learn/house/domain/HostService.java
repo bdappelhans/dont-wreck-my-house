@@ -16,26 +16,10 @@ public class HostService {
     }
 
     public Host findById(String id) throws DataException {
-        List<Host> hosts = repository.findAll().stream()
-                .filter(h -> h.getId().equals(id))
-                .toList();
-
-        if (hosts.size() == 0) {
-            return null;
-        } else {
-            return hosts.get(0);
-        }
+        return repository.findById(id);
     }
 
     public Host findByEmail(String email) throws DataException {
-        List<Host> hosts = repository.findAll().stream()
-                .filter(h -> h.getEmail().equals(email))
-                .toList();
-
-        if (hosts.size() == 0) {
-            return null;
-        } else {
-            return hosts.get(0);
-        }
+        return repository.findByEmail(email);
     }
 }

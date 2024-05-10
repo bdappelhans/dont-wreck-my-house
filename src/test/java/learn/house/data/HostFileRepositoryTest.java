@@ -33,4 +33,35 @@ class HostFileRepositoryTest {
         assertEquals(15, all.size());
     }
 
+    @Test
+    void shouldNotFindNonexistentHostId() throws DataException {
+        Host result = repository.findById("Nonexistent Id");
+
+        assertNull(result);
+    }
+
+    @Test
+    void shouldFindExistingHostId() throws DataException {
+        Host result = repository.findById("d63304e3-de36-4ecc-8f8f-847431ffff64");
+
+        assertNotNull(result);
+        assertEquals("ezuppa8@yale.edu", result.getEmail());
+        assertEquals("(915) 4423313", result.getPhoneNumber());
+    }
+
+    @Test
+    void shouldNotFindNonexistentHostEmail() throws DataException {
+        Host result = repository.findByEmail("nonexistentemail@gmail.com");
+
+        assertNull(result);
+    }
+
+    @Test
+    void shouldFindExistingHostEmail() throws DataException {
+        Host result = repository.findByEmail("ezuppa8@yale.edu");
+
+        assertNotNull(result);
+        assertEquals("d63304e3-de36-4ecc-8f8f-847431ffff64", result.getId());
+        assertEquals("(915) 4423313", result.getPhoneNumber());
+    }
 }

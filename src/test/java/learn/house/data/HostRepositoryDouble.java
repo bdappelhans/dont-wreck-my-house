@@ -26,4 +26,26 @@ public class HostRepositoryDouble implements HostRepository {
     public List<Host> findAll() throws DataException {
         return hosts;
     }
+
+    @Override
+    public Host findById(String id) throws DataException {
+        if (id.equals(hostOne.getId())) {
+            return hostOne;
+        } else if (id.equals(hostTwo.getId())) {
+            return hostTwo;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Host findByEmail(String email) throws DataException {
+        if (email.equals(hostOne.getEmail())) {
+            return hostOne;
+        } else if (email.equals(hostTwo.getEmail())) {
+            return hostTwo;
+        } else {
+            return null;
+        }
+    }
 }

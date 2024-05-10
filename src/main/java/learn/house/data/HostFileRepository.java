@@ -39,6 +39,32 @@ public class HostFileRepository implements HostRepository {
         return all;
     }
 
+    @Override
+    public Host findById(String id) throws DataException {
+        List<Host> hosts = findAll().stream()
+                .filter(h -> h.getId().equals(id))
+                .toList();
+
+        if (hosts.size() == 0) {
+            return null;
+        } else {
+            return hosts.get(0);
+        }
+    }
+
+    @Override
+    public Host findByEmail(String email) throws DataException {
+        List<Host> hosts = findAll().stream()
+                .filter(h -> h.getEmail().equals(email))
+                .toList();
+
+        if (hosts.size() == 0) {
+            return null;
+        } else {
+            return hosts.get(0);
+        }
+    }
+
     private Host deserialize(String[] fields) {
         Host result = new Host();
         result.setId(fields[0]);
