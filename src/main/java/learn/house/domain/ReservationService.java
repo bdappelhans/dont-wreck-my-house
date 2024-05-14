@@ -1,6 +1,8 @@
 package learn.house.domain;
 
 import learn.house.data.DataException;
+import learn.house.data.GuestRepository;
+import learn.house.data.HostRepository;
 import learn.house.data.ReservationRepository;
 import learn.house.models.Guest;
 import learn.house.models.Host;
@@ -13,18 +15,18 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
 
-    private final GuestService guestService;
+    private final GuestRepository guestRepository;
 
-    private final HostService hostService;
+    private final HostRepository hostRepository;
 
-    public ReservationService(ReservationRepository reservationRepository, GuestService guestService, HostService hostService) {
+    public ReservationService(ReservationRepository reservationRepository, GuestRepository guestRepository, HostRepository hostRepository) {
         this.reservationRepository = reservationRepository;
-        this.guestService = guestService;
-        this.hostService = hostService;
+        this.guestRepository = guestRepository;
+        this.hostRepository = hostRepository;
     }
 
     public List<Reservation> findReservationsByHostEmail(String email) throws DataException {
-        String hostId = hostService.findByEmail(email).getId();
+        String hostId = hostRepository.findByEmail(email).getId();
 
         List<Reservation> reservations = new ArrayList<>();
         reservations = reservationRepository.findByHostId(hostId);
@@ -38,8 +40,8 @@ public class ReservationService {
             Host host = new Host();
             Guest guest = new Guest();
 
-            host = hostService.findById(r.getHost().getId());
-            guest = guestService.findById(r.getGuest().getId());
+            host = hostRepository.findById(r.getHost().getId());
+            guest = guestRepository.findById(r.getGuest().getId());
 
             r.setHost(host);
             r.setGuest(guest);
