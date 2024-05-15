@@ -18,7 +18,7 @@ public class Controller {
     }
 
     public void run() {
-        view.displayHeader("Welcome to Sustainable Foraging");
+        view.displayHeader("Welcome to Don't Wreck My House");
         try {
             runAppLoop();
         } catch (DataException ex) {
@@ -49,6 +49,10 @@ public class Controller {
     }
 
     private void viewReservationsByHost() {
+        view.displayHeader("View Reservations By Host");
+
+        String hostEmail = view.getEmail();
+
 
     }
 

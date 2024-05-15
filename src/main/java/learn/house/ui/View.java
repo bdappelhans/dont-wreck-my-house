@@ -17,7 +17,7 @@ public class View {
         for (MainMenuOption option : MainMenuOption.values()) {
             io.printf("%s. %s%n", option.getValue(), option.getMessage());
             min = Math.min(min, option.getValue());
-            max = Math.max(max, option.getValue());
+            max = Math.max(max, option.getValue() + 1);
         }
 
         String message = String.format("Select [%s-%s]: ", min, max - 1);
@@ -34,5 +34,18 @@ public class View {
     public void displayException(Exception ex) {
         displayHeader("A critical error occurred:");
         io.println(ex.getMessage());
+    }
+
+    public String getEmail() {
+        String email = io.readRequiredString("Enter host email: ");
+
+        // keep prompting for email if input doesn't contain '@'
+        while (!email.contains("@")) {
+            io.println("Please enter a valid email address.\n");
+
+           email = io.readRequiredString("Enter host email: ");
+        }
+
+        return email;
     }
 }
