@@ -25,28 +25,34 @@ public class ReservationService {
         this.hostRepository = hostRepository;
     }
 
-    public List<Reservation> findReservationsByHostEmail(String email) throws DataException {
-        String hostId = hostRepository.findByEmail(email).getId();
-
+    public Result<List<Reservation>> findReservationsByHostEmail(String email) throws DataException {
         List<Reservation> reservations = new ArrayList<>();
-        reservations = reservationRepository.findByHostId(hostId);
+        Result<List<Reservation>> result = new Result<>();
 
-        if (reservations.size() == 0) { // return null if list is empty/no reservations found for host
-            return null;
+        Host host = hostRepository.findByEmail(email);
+
+        if (host == null) { // return unsuccessful result if host can't be found
+            result.addErrorMessage(String.format("No host with email '%s' found.", email));
+            return result;
+        }
+
+        reservations = reservationRepository.findByHostId(host.getId());
+
+        if (reservations.size() == 0) { // return unsuccessful result if list is empty/no reservations found for host
+            result.addErrorMessage(String.format("There are no current reservations for host with email '%s'", email));
+            return result;
         }
 
         // loop through list and assign guest and host to each reservation
         for (Reservation r : reservations) {
-            Host host = new Host();
-            Guest guest = new Guest();
-
-            host = hostRepository.findById(r.getHost().getId());
-            guest = guestRepository.findById(r.getGuest().getId());
+            Guest guest = guestRepository.findById(r.getGuest().getId());
 
             r.setHost(host);
             r.setGuest(guest);
         }
 
-        return reservations;
+        result.setPayload(reservations);
+
+        return result;
     }
 }

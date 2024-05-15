@@ -1,16 +1,37 @@
 package learn.house.data;
 
+import learn.house.models.Guest;
+import learn.house.models.Host;
 import learn.house.models.Reservation;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReservationRepositoryDouble implements ReservationRepository{
 
-    private final Reservation reservation = new Reservation();
+    private final Reservation reservation;
+
+    public ReservationRepositoryDouble() {
+        Host host = new Host();
+        host.setId("host_one_id");
+
+        Guest guest = new Guest();
+        guest.setId(1);
+
+        reservation = new Reservation(host, guest, 1, LocalDate.now(), LocalDate.now().plusDays(3), BigDecimal.TEN);
+    }
 
     @Override
     public List<Reservation> findByHostId(String hostId) throws DataException {
-        return List.of();
+        List<Reservation> reservations = new ArrayList<>();
+
+        if (hostId.equals("host_one_id")) {
+            reservations.add(reservation);
+        }
+
+        return reservations;
     }
 
     @Override
