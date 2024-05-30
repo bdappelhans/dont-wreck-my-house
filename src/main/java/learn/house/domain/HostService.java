@@ -29,7 +29,17 @@ public class HostService {
         return result;
     }
 
-    public Host findByEmail(String email) throws DataException {
-        return repository.findByEmail(email);
+    public Result<Host> findByEmail(String email) throws DataException {
+        Result<Host> result = new Result<>();
+
+        Host host = repository.findByEmail(email);
+
+        if (host == null) {
+            result.addErrorMessage(String.format("No host with email %s was found", email));
+        } else {
+            result.setPayload(host);
+        }
+
+        return result;
     }
 }

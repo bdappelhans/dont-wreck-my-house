@@ -22,21 +22,24 @@ class HostServiceTest {
     void shouldFindExistingHostId() throws DataException {
         Result<Host> result = service.findById("host_one_id");
         assertNotNull(result.getPayload());
+        assertEquals(0, result.getErrorMessages().size());
         assertEquals("host_one_id", result.getPayload().getId());
         assertEquals("Chicago", result.getPayload().getCity());
     }
 
     @Test
     void shouldNotFindNonexistentHostEmail() throws DataException {
-        Host result = service.findByEmail("nonexistentemail@gmail.com");
-        assertNull(result);
+        Result<Host> result = service.findByEmail("nonexistentemail@gmail.com");
+        assertNull(result.getPayload());
+        assertTrue(result.getErrorMessages().get(0).contains("No host with email"));
     }
 
     @Test
     void shouldFindExistingHostEmail() throws DataException {
-        Host result = service.findByEmail("testingemail@gmail.com");
-        assertNotNull(result);
-        assertEquals("host_two_id", result.getId());
-        assertEquals("testingemail@gmail.com", result.getEmail());
+        Result<Host> result = service.findByEmail("testingemail@gmail.com");
+        assertNotNull(result.getPayload());
+        assertEquals(0, result.getErrorMessages().size());
+        assertEquals("host_two_id", result.getPayload().getId());
+        assertEquals("testingemail@gmail.com", result.getPayload().getEmail());
     }
 }
