@@ -13,16 +13,17 @@ class HostServiceTest {
 
     @Test
     void shouldNotFindNonexistentHostId() throws DataException {
-        Host result = service.findById("Nonexistent Id");
-        assertNull(result);
+        Result<Host> result = service.findById("Nonexistent Id");
+        assertNull(result.getPayload());
+        assertTrue(result.getErrorMessages().get(0).contains("No host with id"));
     }
 
     @Test
     void shouldFindExistingHostId() throws DataException {
-        Host result = service.findById("host_one_id");
-        assertNotNull(result);
-        assertEquals("host_one_id", result.getId());
-        assertEquals("Chicago", result.getCity());
+        Result<Host> result = service.findById("host_one_id");
+        assertNotNull(result.getPayload());
+        assertEquals("host_one_id", result.getPayload().getId());
+        assertEquals("Chicago", result.getPayload().getCity());
     }
 
     @Test

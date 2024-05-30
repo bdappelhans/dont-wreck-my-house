@@ -1,5 +1,10 @@
 package learn.house.ui;
 
+import learn.house.domain.Result;
+import learn.house.models.Reservation;
+
+import java.util.List;
+
 public class View {
 
     private final ConsoleIO io;
@@ -34,6 +39,25 @@ public class View {
     public void displayException(Exception ex) {
         displayHeader("A critical error occurred:");
         io.println(ex.getMessage());
+    }
+
+    public void displayReservations(Result<List<Reservation>> result) {
+        if (!result.isSuccess()) { // print error messages if unsuccessful
+            for (String message : result.getErrorMessages()) {
+                io.println("[ERROR]");
+                io.println(message);
+            }
+        } else { // print reservations if successful
+            for (Reservation reservation : result.getPayload()) {
+                io.println(String.format("ID: %s, Dates: %s - %s, Guest: %s %s (%s)",
+                        reservation.getId(),
+                        reservation.getStartDate().toString(),
+                        reservation.getEndDate().toString(),
+                        reservation.getGuest().getFirstName(),
+                        reservation.getGuest().getLastName(),
+                        reservation.getGuest().getEmail()));
+            }
+        }
     }
 
     public String getEmail() {

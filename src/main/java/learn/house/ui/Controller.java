@@ -2,6 +2,9 @@ package learn.house.ui;
 
 import learn.house.data.DataException;
 import learn.house.domain.*;
+import learn.house.models.Reservation;
+
+import java.util.List;
 
 public class Controller {
 
@@ -48,10 +51,12 @@ public class Controller {
         } while (option != MainMenuOption.EXIT);
     }
 
-    private void viewReservationsByHost() {
+    private void viewReservationsByHost() throws DataException {
         view.displayHeader("View Reservations By Host");
 
         String hostEmail = view.getEmail();
+
+        Result<List<Reservation>> result = reservationService.findReservationsByHostEmail(hostEmail);
 
 
     }

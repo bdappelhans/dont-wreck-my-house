@@ -15,8 +15,18 @@ public class HostService {
         this.repository = repository;
     }
 
-    public Host findById(String id) throws DataException {
-        return repository.findById(id);
+    public Result<Host> findById(String id) throws DataException {
+        Result<Host> result = new Result<>();
+
+        Host host = repository.findById(id);
+
+        if (host == null) {
+            result.addErrorMessage(String.format("No host with id %s was found", id));
+        } else {
+            result.setPayload(host);
+        }
+
+        return result;
     }
 
     public Host findByEmail(String email) throws DataException {
