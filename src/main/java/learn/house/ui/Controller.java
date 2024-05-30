@@ -56,7 +56,7 @@ public class Controller {
 
         String hostEmail = view.getEmail();
 
-        Result<List<Reservation>> result = reservationService.findReservationsByHostEmail(hostEmail);
+        // Result<List<Reservation>> result = reservationService.findReservationsByHostEmail(hostEmail);
 
 
     }

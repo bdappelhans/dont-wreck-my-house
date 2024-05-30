@@ -25,21 +25,19 @@ public class ReservationService {
         this.hostRepository = hostRepository;
     }
 
-    public Result<List<Reservation>> findReservationsByHostEmail(String email) throws DataException {
+    public Result<List<Reservation>> findReservationsByHost(Host host) throws DataException {
         List<Reservation> reservations = new ArrayList<>();
         Result<List<Reservation>> result = new Result<>();
 
-        Host host = hostRepository.findByEmail(email);
-
         if (host == null) { // return unsuccessful result if host can't be found
-            result.addErrorMessage(String.format("No host with email '%s' found.", email));
+            result.addErrorMessage("No host found");
             return result;
         }
 
         reservations = reservationRepository.findByHostId(host.getId());
 
         if (reservations.size() == 0) { // return unsuccessful result if list is empty/no reservations found for host
-            result.addErrorMessage(String.format("There are no current reservations for host with email '%s'", email));
+            result.addErrorMessage(String.format("There are no current reservations for host with email '%s'", host.getEmail()));
             return result;
         }
 
