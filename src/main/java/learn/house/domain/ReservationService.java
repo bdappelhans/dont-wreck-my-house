@@ -55,6 +55,25 @@ public class ReservationService {
     }
 
     Result<Reservation> add(Reservation reservation) throws DataException {
-        return null;
+        Result<Reservation> result = new Result<>();
+
+        // check to make sure guest, host, and dates aren't null
+        if (reservation.getGuest() == null) {
+            result.addErrorMessage("Valid guest required");
+        }
+
+        if (reservation.getHost() == null) {
+            result.addErrorMessage("Valid host required");
+        }
+
+        if (reservation.getStartDate() == null) {
+            result.addErrorMessage("Valid start date required");
+        }
+
+        if (reservation.getEndDate() == null) {
+            result.addErrorMessage("Valid end date required");
+        }
+
+        return result;
     }
 }
