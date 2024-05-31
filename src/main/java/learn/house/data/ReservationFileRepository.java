@@ -3,11 +3,13 @@ package learn.house.data;
 import learn.house.models.Guest;
 import learn.house.models.Host;
 import learn.house.models.Reservation;
+import org.springframework.cglib.core.Local;
 
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +59,11 @@ public class ReservationFileRepository implements ReservationRepository {
                 .orElse(0) + 1;
 
         reservation.setId(nextId);
+
+        // if reservation rate has not been entered manually, calculate and set it based on dates
+        if (reservation.getTotal() == null) {
+            reservation.calculateTotal();
+        }
 
         reservations.add(reservation);
         writeAll(reservations, reservation.getHost().getId());

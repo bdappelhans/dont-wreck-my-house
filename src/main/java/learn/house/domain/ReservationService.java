@@ -53,4 +53,8 @@ public class ReservationService {
 
         return result;
     }
+
+    Result<Reservation> add(Reservation reservation) throws DataException {
+        return null;
+    }
 }

@@ -1,6 +1,7 @@
 package learn.house.models;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 public class Reservation {
@@ -73,5 +74,20 @@ public class Reservation {
 
     public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    public void calculateTotal() {
+        BigDecimal total = BigDecimal.ZERO;
+
+        // iterate from start to end date, add appropriate daily rate to total
+        for (LocalDate currentDate = startDate; currentDate.isBefore(endDate); currentDate = currentDate.plusDays(1)) {
+            if (currentDate.getDayOfWeek() == DayOfWeek.FRIDAY || currentDate.getDayOfWeek() == DayOfWeek.SATURDAY) {
+                total = total.add(host.weekendRate);
+            } else {
+                total = total.add(host.standardRate);
+            }
+        }
+
+        setTotal(total);
     }
 }

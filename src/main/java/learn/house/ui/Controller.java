@@ -84,7 +84,17 @@ public class Controller {
         }
 
         String guestEmail = view.getEmail("guest");
-        //Result<Guest>
+        Result<Guest> guestResult = guestService.findByEmail(guestEmail);
+
+        if (!guestResult.isSuccess()) {
+            view.displayError(guestResult);
+            return;
+        }
+
+        Host host = hostResult.getPayload();
+        Guest guest = guestResult.getPayload();
+
+        Reservation reservation = view.makeReservation(host, guest);
     }
 
     private void editReservation() {

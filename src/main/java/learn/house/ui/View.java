@@ -5,6 +5,7 @@ import learn.house.models.Guest;
 import learn.house.models.Host;
 import learn.house.models.Reservation;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class View {
@@ -83,6 +84,16 @@ public class View {
     }
 
     public Reservation makeReservation(Host host, Guest guest) {
-        return null;
+        Reservation reservation = new Reservation();
+        reservation.setHost(host);
+        reservation.setGuest(guest);
+
+        LocalDate startDate = io.readLocalDate("Start date [MM/dd/yyyy]: ");
+        LocalDate endDate = io.readLocalDate("End date [MM/dd/yyyy]: ");
+
+        reservation.setStartDate(startDate);
+        reservation.setEndDate(endDate);
+
+        return reservation;
     }
 }

@@ -53,6 +53,8 @@ class ReservationFileRepositoryTest {
 
         Host host = new Host();
         host.setId("9d469342-ad0b-4f5a-8d28-e81e690ba29a");
+        host.setStandardRate(BigDecimal.ONE);
+        host.setWeekendRate(BigDecimal.TEN);
 
         Guest guest = new Guest();
         guest.setId(30);
@@ -60,12 +62,12 @@ class ReservationFileRepositoryTest {
         reservation.setId(0);
         reservation.setHost(host);
         reservation.setGuest(guest);
-        reservation.setStartDate(LocalDate.now());
-        reservation.setEndDate(LocalDate.now().plusDays(2));
-        reservation.setTotal(BigDecimal.TEN);
+        reservation.setStartDate(LocalDate.of(2024, 5, 31));
+        reservation.setEndDate(LocalDate.of(2024, 6, 4));
 
         Reservation actual = repository.add(reservation);
         assertEquals(2, actual.getId());
+        assertEquals(BigDecimal.valueOf(22), actual.getTotal());
 
         List<Reservation> reservations = repository.findByHostId("9d469342-ad0b-4f5a-8d28-e81e690ba29a");
         assertEquals(2, reservations.size());
