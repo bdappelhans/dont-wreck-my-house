@@ -15,13 +15,31 @@ public class GuestService {
         this.repository = repository;
     }
 
-    public Guest findById(int id) throws DataException {
+    public Result<Guest> findById(int id) throws DataException {
+        Result<Guest> result = new Result<>();
 
-        return repository.findById(id);
+        Guest guest = repository.findById(id);
+
+        if (guest == null) {
+            result.addErrorMessage(String.format("No guest with id '%s' found", id));
+        } else {
+            result.setPayload(guest);
+        }
+
+        return result;
     }
 
-    public Guest findByEmail(String email) throws DataException {
+    public Result<Guest> findByEmail(String email) throws DataException {
+        Result<Guest> result = new Result<>();
 
-        return repository.findByEmail(email);
+        Guest guest = repository.findByEmail(email);
+
+        if (guest == null) {
+            result.addErrorMessage(String.format("No guest with email '%s' found", email));
+        } else {
+            result.setPayload(guest);
+        }
+
+        return result;
     }
 }

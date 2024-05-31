@@ -2,6 +2,7 @@ package learn.house.ui;
 
 import learn.house.data.DataException;
 import learn.house.domain.*;
+import learn.house.models.Guest;
 import learn.house.models.Host;
 import learn.house.models.Reservation;
 
@@ -55,7 +56,7 @@ public class Controller {
     private void viewReservationsByHost() throws DataException {
         view.displayHeader("View Reservations By Host");
 
-        String hostEmail = view.getEmail();
+        String hostEmail = view.getEmail("host");
         Result<Host> hostResult = hostService.findByEmail(hostEmail);
 
         if (!hostResult.isSuccess()) {
@@ -71,8 +72,19 @@ public class Controller {
         view.displayReservations(reservationResult);
     }
 
-    private void makeReservation() {
+    private void makeReservation() throws DataException {
+        view.displayHeader("Make a Reservation");
 
+        String hostEmail = view.getEmail("host");
+        Result<Host> hostResult = hostService.findByEmail(hostEmail);
+
+        if (!hostResult.isSuccess()) {
+            view.displayError(hostResult);
+            return;
+        }
+
+        String guestEmail = view.getEmail("guest");
+        //Result<Guest>
     }
 
     private void editReservation() {

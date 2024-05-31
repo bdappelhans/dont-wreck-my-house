@@ -13,30 +13,33 @@ class GuestServiceTest {
 
     @Test
     void shouldNotFindNonexistentGuestId() throws DataException {
-        Guest result = service.findById(3);
-        assertNull(result);
+        Result<Guest> result = service.findById(3);
+        assertNull(result.getPayload());
+        assertFalse(result.isSuccess());
     }
 
     @Test
     void shouldFindExistingGuestId() throws DataException {
-        Guest result = service.findById(2);
-        assertNotNull(result);
-        assertEquals(2, result.getId());
-        assertEquals("anothertestemail@gmail.com", result.getEmail());
+        Result<Guest> result = service.findById(2);
+        assertNotNull(result.getPayload());
+        assertTrue(result.isSuccess());
+        assertEquals(2, result.getPayload().getId());
+        assertEquals("anothertestemail@gmail.com", result.getPayload().getEmail());
     }
 
     @Test
     void shouldNotFindNonExistentGuestEmail() throws DataException {
-        Guest result = service.findByEmail("nonexistentemail@yahoo.com");
-        assertNull(result);
+        Result<Guest> result = service.findByEmail("nonexistentemail@yahoo.com");
+        assertNull(result.getPayload());
+        assertFalse(result.isSuccess());
     }
 
     @Test
     void shouldFindExistingEmail() throws DataException {
-        Guest result = service.findByEmail("testemail@gmail.com");
-        assertNotNull(result);
-        assertEquals(1, result.getId());
-        assertEquals("McTest", result.getLastName());
+        Result<Guest> result = service.findByEmail("testemail@gmail.com");
+        assertNotNull(result.getPayload());
+        assertEquals(1, result.getPayload().getId());
+        assertEquals("McTest", result.getPayload().getLastName());
     }
 
 }

@@ -1,6 +1,8 @@
 package learn.house.ui;
 
 import learn.house.domain.Result;
+import learn.house.models.Guest;
+import learn.house.models.Host;
 import learn.house.models.Reservation;
 
 import java.util.List;
@@ -67,16 +69,20 @@ public class View {
         }
     }
 
-    public String getEmail() {
-        String email = io.readRequiredString("Enter host email: ");
+    public String getEmail(String emailType) {
+        String email = io.readRequiredString(String.format("Enter %s email: ", emailType));
 
         // keep prompting for email if input doesn't contain '@'
         while (!email.contains("@")) {
             io.println("Please enter a valid email address.\n");
 
-           email = io.readRequiredString("Enter host email: ");
+           email = io.readRequiredString(String.format("Enter %s email: ", emailType));
         }
 
         return email;
+    }
+
+    public Reservation makeReservation(Host host, Guest guest) {
+        return null;
     }
 }
