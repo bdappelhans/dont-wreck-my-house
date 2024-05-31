@@ -2,6 +2,7 @@ package learn.house.ui;
 
 import learn.house.data.DataException;
 import learn.house.domain.*;
+import learn.house.models.Host;
 import learn.house.models.Reservation;
 
 import java.util.List;
@@ -55,10 +56,19 @@ public class Controller {
         view.displayHeader("View Reservations By Host");
 
         String hostEmail = view.getEmail();
+        Result<Host> hostResult = hostService.findByEmail(hostEmail);
 
-        // Result<List<Reservation>> result = reservationService.findReservationsByHostEmail(hostEmail);
+        if (!hostResult.isSuccess()) {
+            view.displayError(hostResult);
+            return;
+        }
 
+        Host host = hostResult.getPayload();
 
+        Result<List<Reservation>> reservationResult = reservationService.findReservationsByHost(host);
+
+        view.displayHeader(String.format("Reservations for %s", host.getEmail()));
+        view.displayReservations(reservationResult);
     }
 
     private void makeReservation() {

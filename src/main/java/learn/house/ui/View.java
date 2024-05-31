@@ -41,6 +41,13 @@ public class View {
         io.println(ex.getMessage());
     }
 
+    public void displayError(Result result) {
+        for (String message : result.getErrorMessages()) {
+            io.println("[ERROR]");
+            io.println(message);
+        }
+    }
+
     public void displayReservations(Result<List<Reservation>> result) {
         if (!result.isSuccess()) { // print error messages if unsuccessful
             for (String message : result.getErrorMessages()) {

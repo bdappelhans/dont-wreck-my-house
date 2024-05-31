@@ -36,7 +36,7 @@ public class ReservationService {
 
         reservations = reservationRepository.findByHostId(host.getId());
 
-        if (reservations.size() == 0) { // return unsuccessful result if list is empty/no reservations found for host
+        if (reservations == null) { // return unsuccessful result if list is empty/no reservations found for host
             result.addErrorMessage(String.format("There are no current reservations for host with email '%s'", host.getEmail()));
             return result;
         }
