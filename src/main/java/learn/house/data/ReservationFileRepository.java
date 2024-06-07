@@ -27,11 +27,6 @@ public class ReservationFileRepository implements ReservationRepository {
     public List<Reservation> findByHostId(String hostId) throws DataException {
         List<Reservation> result = new ArrayList<>();
         String filePath = getFilePath(hostId);
-        File f = new File(filePath);
-        // if file doesn't exist in directory, return null
-        if (!f.exists()) {
-            return null;
-        }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             reader.readLine(); // read header
@@ -51,12 +46,20 @@ public class ReservationFileRepository implements ReservationRepository {
 
     @Override
     public Reservation add(Reservation reservation) throws DataException {
-        List<Reservation> reservations = findByHostId(reservation.getHost().getId());
+        List<Reservation> reservations = new ArrayList<>();
+        reservations = findByHostId(reservation.getHost().getId());
         // find next reservation ID to be created
-        int nextId = reservations.stream()
-                .mapToInt(Reservation::getId)
-                .max()
-                .orElse(0) + 1;
+
+        int nextId;
+
+        if (reservations != null) {
+            nextId = reservations.stream()
+                    .mapToInt(Reservation::getId)
+                    .max()
+                    .orElse(0) + 1;
+        } else {
+            nextId = 1;
+        }
 
         reservation.setId(nextId);
 

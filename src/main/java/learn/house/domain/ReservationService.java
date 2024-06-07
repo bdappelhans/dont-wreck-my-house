@@ -55,7 +55,7 @@ public class ReservationService {
         return result;
     }
 
-    Result<Reservation> add(Reservation reservation) throws DataException {
+    public Result<Reservation> add(Reservation reservation) throws DataException {
         Result<Reservation> result = new Result<>();
 
         // check to make sure guest, host, and dates aren't null
@@ -96,9 +96,7 @@ public class ReservationService {
         // check that reservation doesn't overlap with host's other reservations
         List<Reservation> reservations = reservationRepository.findByHostId(reservation.getHost().getId());
 
-        if (reservations == null || reservations.size() == 0) {
-            return result;
-        } else {
+        if (reservations != null && reservations.size() != 0) {
             // iterate through reservations list and check them against reservation we're attempting to add
             for (Reservation r : reservations) { // attempted reservation start date is same as a current reservation start date
                 // or attempted reservation end date is the same as a current res end date
@@ -116,9 +114,10 @@ public class ReservationService {
             }
         }
 
-        // if no issues, add reservation to result payload
+        // if no issues, add reservation to repository and to result payload
         if (result.isSuccess()) {
-            result.setPayload(reservation);
+            Reservation addedReservation = reservationRepository.add(reservation);
+            result.setPayload(addedReservation);
         }
 
         return result;

@@ -70,6 +70,28 @@ public class View {
         }
     }
 
+    public void displayReservation(Result<Reservation> result, String action) {
+        if (!result.isSuccess()) { // print error messages if unsuccessful
+            for (String message : result.getErrorMessages()) {
+                io.println("[ERROR]");
+                io.println(message);
+            }
+        } else { // print reservation if successful
+
+            io.println(String.format("\nSuccess! Reservation %s!\n", action));
+
+            Reservation reservation = result.getPayload();
+
+            io.println(String.format("ID: %s, Dates: %s - %s, Guest: %s %s (%s)",
+                    reservation.getId(),
+                    reservation.getStartDate().toString(),
+                    reservation.getEndDate().toString(),
+                    reservation.getGuest().getFirstName(),
+                    reservation.getGuest().getLastName(),
+                    reservation.getGuest().getEmail()));
+        }
+    }
+
     public String getEmail(String emailType) {
         String email = io.readRequiredString(String.format("Enter %s email: ", emailType));
 

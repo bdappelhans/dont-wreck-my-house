@@ -36,7 +36,22 @@ public class ReservationRepositoryDouble implements ReservationRepository{
 
     @Override
     public Reservation add(Reservation reservation) throws DataException {
-        return null;
+        List<Reservation> reservations = findByHostId(reservation.getHost().getId());
+
+        int nextId = reservations.stream()
+                .mapToInt(Reservation::getId)
+                .max()
+                .orElse(0) + 1;
+
+        reservation.setId(nextId);
+
+        // if reservation rate has not been entered manually, calculate and set it based on dates
+        if (reservation.getTotal() == null) {
+            reservation.calculateTotal();
+        }
+
+
+        return reservation;
     }
 
     @Override

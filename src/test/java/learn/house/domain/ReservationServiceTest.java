@@ -9,6 +9,7 @@ import learn.house.models.Host;
 import learn.house.models.Reservation;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,6 +20,11 @@ class ReservationServiceTest {
     ReservationService service = new ReservationService(new ReservationRepositoryDouble(),
             new GuestRepositoryDouble(), new HostRepositoryDouble());
 
+    private final Host hostOne = new Host("host_one_id", "McTest", "testemail@gmail.com", "(555)-123-4567",
+            "123 Test St", "Chicago", "IL", "12345", BigDecimal.ONE, BigDecimal.TEN);
+
+    private final Guest guestOne = new Guest(1, "Test", "McTest",
+            "testemail@gmail.com", "(555)-123-4567", "CA");
 
     @Test
     void shouldReturnNoReservationsByHostEmail() throws DataException {
@@ -132,5 +138,18 @@ class ReservationServiceTest {
         Result<Reservation> result = service.add(reservation);
         assertFalse(result.isSuccess());
         assertEquals(result.getErrorMessages().get(0), "Attempted reservation conflicts with a current reservation");
+    }
+
+    @Test
+    void shouldAdd() throws DataException {
+        Reservation reservation = new Reservation();
+        reservation.setHost(hostOne);
+        reservation.setGuest(guestOne);
+        reservation.setStartDate(LocalDate.now().plusDays(60));
+        reservation.setEndDate(LocalDate.now().plusDays(65));
+
+        Result<Reservation> result = service.add(reservation);
+        assertTrue(result.isSuccess());
+        assertNotNull(result.getPayload());
     }
 }

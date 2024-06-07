@@ -66,6 +66,7 @@ class ReservationFileRepositoryTest {
         reservation.setEndDate(LocalDate.of(2024, 6, 4));
 
         Reservation actual = repository.add(reservation);
+        assertNotNull(actual);
         assertEquals(2, actual.getId());
         assertEquals(BigDecimal.valueOf(22), actual.getTotal());
 

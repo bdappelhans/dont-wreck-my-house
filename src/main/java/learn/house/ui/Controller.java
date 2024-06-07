@@ -95,6 +95,9 @@ public class Controller {
         Guest guest = guestResult.getPayload();
 
         Reservation reservation = view.makeReservation(host, guest);
+        Result<Reservation> result = reservationService.add(reservation);
+
+        view.displayReservation(result, "added");
     }
 
     private void editReservation() {
