@@ -68,7 +68,7 @@ public class Controller {
 
         Result<List<Reservation>> reservationResult = reservationService.findReservationsByHost(host);
 
-        view.displayHeader(String.format("Reservations for %s", host.getEmail()));
+        view.displayHeader(String.format("Reservations for %s / %s: %s, %s", host.getEmail(), host.getLastName(), host.getCity(), host.getState()));
         view.displayReservations(reservationResult);
     }
 
@@ -83,6 +83,14 @@ public class Controller {
             return;
         }
 
+        Host host = hostResult.getPayload();
+
+        Result<List<Reservation>> currentReservationsResult = reservationService.findReservationsByHost(host);
+
+        view.displayHeader(String.format("Current and Future Reservations for %s / %s: %s, %s", host.getEmail(), host.getLastName(), host.getCity(), host.getState()));
+
+        view.displayCurrentAndFutureReservations(currentReservationsResult);
+
         String guestEmail = view.getEmail("guest");
         Result<Guest> guestResult = guestService.findByEmail(guestEmail);
 
@@ -91,7 +99,6 @@ public class Controller {
             return;
         }
 
-        Host host = hostResult.getPayload();
         Guest guest = guestResult.getPayload();
 
         Reservation reservation = view.makeReservation(host, guest);

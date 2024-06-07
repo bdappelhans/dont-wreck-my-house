@@ -59,15 +59,41 @@ public class View {
             }
         } else { // print reservations if successful
             for (Reservation reservation : result.getPayload()) {
-                io.println(String.format("ID: %s, Dates: %s - %s, Guest: %s %s (%s)",
+                io.println(String.format("ID: %s, Dates: %s - %s, Guest: %s %s (%s), Total: $%s",
                         reservation.getId(),
                         reservation.getStartDate().toString(),
                         reservation.getEndDate().toString(),
                         reservation.getGuest().getFirstName(),
                         reservation.getGuest().getLastName(),
-                        reservation.getGuest().getEmail()));
+                        reservation.getGuest().getEmail(),
+                        reservation.getTotal().toString()));
             }
         }
+    }
+
+    public void displayCurrentAndFutureReservations(Result<List<Reservation>> result) {
+        if (!result.isSuccess()) { // print error messages if unsuccessful
+            for (String message : result.getErrorMessages()) {
+                io.println("[ERROR]");
+                io.println(message);
+            }
+        } else { // print reservations if successful
+            for (Reservation reservation : result.getPayload()) {
+
+                if (!reservation.getStartDate().isBefore(LocalDate.now())) {
+                    io.println(String.format("ID: %s, Dates: %s - %s, Guest: %s %s (%s), Total: $%s",
+                            reservation.getId(),
+                            reservation.getStartDate().toString(),
+                            reservation.getEndDate().toString(),
+                            reservation.getGuest().getFirstName(),
+                            reservation.getGuest().getLastName(),
+                            reservation.getGuest().getEmail(),
+                            reservation.getTotal().toString()));
+                }
+            }
+        }
+
+        io.println("");
     }
 
     public void displayReservation(Result<Reservation> result, String action) {
@@ -82,13 +108,14 @@ public class View {
 
             Reservation reservation = result.getPayload();
 
-            io.println(String.format("ID: %s, Dates: %s - %s, Guest: %s %s (%s)",
+            io.println(String.format("ID: %s, Dates: %s - %s, Guest: %s %s (%s), Total: $%s",
                     reservation.getId(),
                     reservation.getStartDate().toString(),
                     reservation.getEndDate().toString(),
                     reservation.getGuest().getFirstName(),
                     reservation.getGuest().getLastName(),
-                    reservation.getGuest().getEmail()));
+                    reservation.getGuest().getEmail(),
+                    reservation.getTotal().toString()));
         }
     }
 
