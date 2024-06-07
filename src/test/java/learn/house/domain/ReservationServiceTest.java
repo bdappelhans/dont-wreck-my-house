@@ -93,4 +93,44 @@ class ReservationServiceTest {
         assertFalse(result.isSuccess());
         assertEquals(result.getErrorMessages().get(0), "Valid end date required");
     }
+
+    @Test
+    void shouldNotAddPastStartDate() throws DataException {
+        Reservation reservation = new Reservation();
+        reservation.setHost(new Host());
+        reservation.setGuest(new Guest());
+        reservation.setStartDate(LocalDate.of(2020, 1, 1));
+        reservation.setEndDate(LocalDate.of(2020, 1, 4));
+
+        Result<Reservation> result = service.add(reservation);
+        assertFalse(result.isSuccess());
+        assertEquals(result.getErrorMessages().get(0), "Start date cannot be in the past");
+    }
+
+    @Test
+    void shouldNotAddStartDateAfterEndDate() throws DataException {
+        Reservation reservation = new Reservation();
+        reservation.setHost(new Host());
+        reservation.setGuest(new Guest());
+        reservation.setStartDate(LocalDate.now().plusDays(4));
+        reservation.setEndDate(LocalDate.now());
+
+        Result<Reservation> result = service.add(reservation);
+        assertFalse(result.isSuccess());
+        assertEquals(result.getErrorMessages().get(0), "Start date must be before end date");
+    }
+
+    @Test
+    void shouldNotAddEndDateCoincidingWithCurrentRes() throws DataException {
+        Reservation reservation = new Reservation();
+        reservation.setHost(new Host());
+        reservation.getHost().setId("host_one_id");
+        reservation.setGuest(new Guest());
+        reservation.setStartDate(LocalDate.now().plusDays(5));
+        reservation.setEndDate(LocalDate.now().plusDays(20));
+
+        Result<Reservation> result = service.add(reservation);
+        assertFalse(result.isSuccess());
+        assertEquals(result.getErrorMessages().get(0), "Attempted reservation conflicts with a current reservation");
+    }
 }

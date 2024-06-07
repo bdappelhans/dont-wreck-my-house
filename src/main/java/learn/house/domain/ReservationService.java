@@ -8,6 +8,7 @@ import learn.house.models.Guest;
 import learn.house.models.Host;
 import learn.house.models.Reservation;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +73,52 @@ public class ReservationService {
 
         if (reservation.getEndDate() == null) {
             result.addErrorMessage("Valid end date required");
+        }
+
+        if (!result.isSuccess()) {
+            return result;
+        }
+
+        // check that start date is not in the past
+        if (reservation.getStartDate().isBefore(LocalDate.now())) {
+            result.addErrorMessage("Start date cannot be in the past");
+        }
+
+        // check that start date is before end date
+        if (reservation.getEndDate().isBefore(reservation.getStartDate())) {
+            result.addErrorMessage("Start date must be before end date");
+        }
+
+        if (!result.isSuccess()) {
+            return result;
+        }
+
+        // check that reservation doesn't overlap with host's other reservations
+        List<Reservation> reservations = reservationRepository.findByHostId(reservation.getHost().getId());
+
+        if (reservations == null || reservations.size() == 0) {
+            return result;
+        } else {
+            // iterate through reservations list and check them against reservation we're attempting to add
+            for (Reservation r : reservations) { // attempted reservation start date is same as a current reservation start date
+                // or attempted reservation end date is the same as a current res end date
+                if (reservation.getStartDate().isEqual(r.getStartDate()) || reservation.getEndDate().isEqual(r.getEndDate())) {
+                    result.addErrorMessage("Attempted reservation conflicts with a current reservation");
+
+                    // attempted reservation start date falls between current reservation start and end date
+                } else if (reservation.getStartDate().isAfter(r.getStartDate()) && reservation.getStartDate().isBefore(r.getEndDate())) {
+                    result.addErrorMessage("Attempted reservation conflicts with a current reservation");
+
+                    // attempted reservation end date falls between current reservation start and end date
+                } else if (reservation.getEndDate().isAfter(r.getStartDate()) && reservation.getEndDate().isBefore(r.getEndDate())) {
+                    result.addErrorMessage("Attempted reservation conflicts with a current reservation");
+                }
+            }
+        }
+
+        // if no issues, add reservation to result payload
+        if (result.isSuccess()) {
+            result.setPayload(reservation);
         }
 
         return result;

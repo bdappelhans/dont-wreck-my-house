@@ -20,7 +20,7 @@ public class ReservationRepositoryDouble implements ReservationRepository{
         Guest guest = new Guest();
         guest.setId(1);
 
-        reservation = new Reservation(host, guest, 1, LocalDate.now(), LocalDate.now().plusDays(3), BigDecimal.TEN);
+        reservation = new Reservation(host, guest, 1, LocalDate.now().plusDays(14), LocalDate.now().plusDays(28), BigDecimal.TEN);
     }
 
     @Override
