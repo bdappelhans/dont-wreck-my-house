@@ -113,8 +113,7 @@ public class Controller {
 
     }
 
-    private void cancelReservation() {
-        /*
+    private void cancelReservation() throws DataException {
         view.displayHeader("Cancel a Reservation");
 
         String hostEmail = view.getEmail("host");
@@ -124,6 +123,20 @@ public class Controller {
             view.displayError(hostResult);
             return;
         }
-         */
+
+        Host host = hostResult.getPayload();
+        Result<List<Reservation>> futureReservationsResult = reservationService.findFutureReservationsByHost(host);
+        List<Reservation> reservations = futureReservationsResult.getPayload();
+
+        view.displayHeader(String.format("Future Reservations for %s / %s: %s, %s", host.getEmail(),
+                host.getLastName(), host.getCity(), host.getState()));
+        view.displayReservations(futureReservationsResult);
+
+        // if there are no reservations on file to cancel, return from method
+        if (reservations.size() == 0) {
+            return;
+        }
+
+
     }
 }

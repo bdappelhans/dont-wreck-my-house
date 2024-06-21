@@ -55,6 +55,7 @@ public class ReservationService {
         return result;
     }
 
+    // returns list of reservations with end date that is either current date or after
     public Result<List<Reservation>> findCurrentAndFutureReservationsByHost(Host host) throws DataException {
         Result<List<Reservation>> result = findReservationsByHost(host);
 
@@ -68,14 +69,42 @@ public class ReservationService {
 
         // loop through all reservations list
         for (Reservation r : reservations) {
-            // if reservation's end date is after current date, add the reservation to the current and future reservation list
-            if (r.getEndDate().isAfter(LocalDate.now())) {
+            // if reservation's end date is current date or after current date,
+            // add the reservation to the current and future reservation list
+            if (r.getEndDate().isEqual(LocalDate.now()) || r.getEndDate().isAfter(LocalDate.now())) {
                 currentAndFutureReservations.add(r);
             }
         }
 
         // replace old result payload with updated filtered list and return result
         result.setPayload(currentAndFutureReservations);
+
+        return result;
+    }
+
+    // returns list of reservations with start date that is either current date or after
+    public Result<List<Reservation>> findFutureReservationsByHost(Host host) throws DataException {
+        Result<List<Reservation>> result = findReservationsByHost(host);
+
+        // if result is initially unsuccessful return it
+        if (!result.isSuccess()) {
+            return result;
+        }
+
+        List<Reservation> futureReservations = new ArrayList<>();
+        List<Reservation> reservations = result.getPayload();
+
+        // loop through all reservations list
+        for (Reservation r : reservations) {
+            // if reservation's start date is current date or after current date,
+            // add the reservation to the future reservation list
+            if (r.getStartDate().isEqual(LocalDate.now()) || r.getStartDate().isAfter(LocalDate.now())) {
+                futureReservations.add(r);
+            }
+        }
+
+        // replace old result payload with updated filtered list and return result
+        result.setPayload(futureReservations);
 
         return result;
     }
@@ -125,6 +154,19 @@ public class ReservationService {
             Reservation addedReservation = reservationRepository.add(reservation);
             result.setPayload(addedReservation);
         }
+
+        return result;
+    }
+
+    public Result<Reservation> cancel(Reservation reservation) {
+        Result<Reservation> result = new Result<>();
+        validateReservationFields(reservation, result);
+
+        if (!result.isSuccess()) {
+            return result;
+        }
+
+
 
         return result;
     }
