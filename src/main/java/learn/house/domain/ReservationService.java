@@ -82,27 +82,8 @@ public class ReservationService {
 
     public Result<Reservation> add(Reservation reservation) throws DataException {
         Result<Reservation> result = new Result<>();
-
-        // check to make sure guest, host, and dates aren't null
-        if (reservation.getGuest() == null) {
-            result.addErrorMessage("Valid guest required");
-        }
-
-        if (reservation.getHost() == null) {
-            result.addErrorMessage("Valid host required");
-        }
-
-        if (reservation.getStartDate() == null) {
-            result.addErrorMessage("Valid start date required");
-        }
-
-        if (reservation.getEndDate() == null) {
-            result.addErrorMessage("Valid end date required");
-        }
-
-        if (!result.isSuccess()) {
-            return result;
-        }
+        // validate all fields
+        validateReservationFields(reservation, result);
 
         // check that start date is not in the past
         if (reservation.getStartDate().isBefore(LocalDate.now())) {
@@ -146,5 +127,24 @@ public class ReservationService {
         }
 
         return result;
+    }
+
+    private void validateReservationFields(Reservation reservation, Result<Reservation> result) {
+        // check to make sure guest, host, and dates aren't null
+        if (reservation.getGuest() == null) {
+            result.addErrorMessage("Valid guest required");
+        }
+
+        if (reservation.getHost() == null) {
+            result.addErrorMessage("Valid host required");
+        }
+
+        if (reservation.getStartDate() == null) {
+            result.addErrorMessage("Valid start date required");
+        }
+
+        if (reservation.getEndDate() == null) {
+            result.addErrorMessage("Valid end date required");
+        }
     }
 }
