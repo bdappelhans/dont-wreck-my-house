@@ -68,7 +68,8 @@ public class Controller {
 
         Result<List<Reservation>> reservationResult = reservationService.findReservationsByHost(host);
 
-        view.displayHeader(String.format("Reservations for %s / %s: %s, %s", host.getEmail(), host.getLastName(), host.getCity(), host.getState()));
+        view.displayHeader(String.format("All Reservations for %s / %s: %s, %s", host.getEmail(), host.getLastName(),
+                host.getCity(), host.getState()));
         view.displayReservations(reservationResult);
     }
 
@@ -84,12 +85,13 @@ public class Controller {
         }
 
         Host host = hostResult.getPayload();
+        Result<List<Reservation>> currentReservationsResult = reservationService.findCurrentAndFutureReservationsByHost(host);
 
-        Result<List<Reservation>> currentReservationsResult = reservationService.findReservationsByHost(host);
+        view.displayHeader(String.format("Current and Future Reservations for %s / %s: %s, %s", host.getEmail(),
+                host.getLastName(), host.getCity(), host.getState()));
 
-        view.displayHeader(String.format("Current and Future Reservations for %s / %s: %s, %s", host.getEmail(), host.getLastName(), host.getCity(), host.getState()));
-
-        view.displayCurrentAndFutureReservations(currentReservationsResult);
+        view.displayReservations(currentReservationsResult);
+        System.out.println();
 
         String guestEmail = view.getEmail("guest");
         Result<Guest> guestResult = guestService.findByEmail(guestEmail);
@@ -112,6 +114,16 @@ public class Controller {
     }
 
     private void cancelReservation() {
+        /*
+        view.displayHeader("Cancel a Reservation");
 
+        String hostEmail = view.getEmail("host");
+        Result<Host> hostResult = hostService.findByEmail(hostEmail);
+
+        if (!hostResult.isSuccess()) {
+            view.displayError(hostResult);
+            return;
+        }
+         */
     }
 }

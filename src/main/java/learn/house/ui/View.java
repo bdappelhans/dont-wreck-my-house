@@ -5,6 +5,7 @@ import learn.house.models.Guest;
 import learn.house.models.Host;
 import learn.house.models.Reservation;
 
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -58,29 +59,10 @@ public class View {
                 io.println(message);
             }
         } else { // print reservations if successful
-            for (Reservation reservation : result.getPayload()) {
-                io.println(String.format("ID: %s, Dates: %s - %s, Guest: %s %s (%s), Total: $%s",
-                        reservation.getId(),
-                        reservation.getStartDate().toString(),
-                        reservation.getEndDate().toString(),
-                        reservation.getGuest().getFirstName(),
-                        reservation.getGuest().getLastName(),
-                        reservation.getGuest().getEmail(),
-                        reservation.getTotal().toString()));
-            }
-        }
-    }
-
-    public void displayCurrentAndFutureReservations(Result<List<Reservation>> result) {
-        if (!result.isSuccess()) { // print error messages if unsuccessful
-            for (String message : result.getErrorMessages()) {
-                io.println("[ERROR]");
-                io.println(message);
-            }
-        } else { // print reservations if successful
-            for (Reservation reservation : result.getPayload()) {
-
-                if (!reservation.getStartDate().isBefore(LocalDate.now())) {
+            if (result.getPayload().size() == 0) {
+                System.out.println("No reservations on file");
+            } else {
+                for (Reservation reservation : result.getPayload()) {
                     io.println(String.format("ID: %s, Dates: %s - %s, Guest: %s %s (%s), Total: $%s",
                             reservation.getId(),
                             reservation.getStartDate().toString(),
@@ -91,9 +73,7 @@ public class View {
                             reservation.getTotal().toString()));
                 }
             }
-        }
-
-        io.println("");
+        };
     }
 
     public void displayReservation(Result<Reservation> result, String action) {

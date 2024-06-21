@@ -55,6 +55,31 @@ public class ReservationService {
         return result;
     }
 
+    public Result<List<Reservation>> findCurrentAndFutureReservationsByHost(Host host) throws DataException {
+        Result<List<Reservation>> result = findReservationsByHost(host);
+
+        // if result is initially unsuccessful return it
+        if (!result.isSuccess()) {
+            return result;
+        }
+
+        List<Reservation> currentAndFutureReservations = new ArrayList<>();
+        List<Reservation> reservations = result.getPayload();
+
+        // loop through all reservations list
+        for (Reservation r : reservations) {
+            // if reservation's end date is after current date, add the reservation to the current and future reservation list
+            if (r.getEndDate().isAfter(LocalDate.now())) {
+                currentAndFutureReservations.add(r);
+            }
+        }
+
+        // replace old result payload with updated filtered list and return result
+        result.setPayload(currentAndFutureReservations);
+
+        return result;
+    }
+
     public Result<Reservation> add(Reservation reservation) throws DataException {
         Result<Reservation> result = new Result<>();
 
