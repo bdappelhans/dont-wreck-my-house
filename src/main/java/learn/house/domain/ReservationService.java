@@ -158,7 +158,7 @@ public class ReservationService {
         return result;
     }
 
-    public Result<Reservation> cancel(Reservation reservation) {
+    public Result<Reservation> cancel(Reservation reservation) throws DataException {
         Result<Reservation> result = new Result<>();
         validateReservationFields(reservation, result);
 
@@ -166,7 +166,15 @@ public class ReservationService {
             return result;
         }
 
+        boolean successfulCancellation = reservationRepository.remove(reservation);
 
+        // if removal is unsuccessful, add error message to result
+        if (!successfulCancellation) {
+            result.addErrorMessage("Unable to cancel reservation " + reservation.getId() + " for host " +
+                    reservation.getHost().getEmail());
+        } else {
+            result.setPayload(reservation);
+        }
 
         return result;
     }

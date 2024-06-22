@@ -137,6 +137,25 @@ public class Controller {
             return;
         }
 
+        int reservationId = view.getReservationId();
+        Reservation cancelReservation = null;
+
+        // search for reservation ID input inside host's list of future reservations
+        for (Reservation reservation : reservations) {
+            // if reservation found, assign it to cancelReservation variable
+            if (reservation.getId() == reservationId) {
+                cancelReservation = reservation;
+            }
+        }
+
+        // if reservation not found, print error message and return to main method
+        if (cancelReservation == null) {
+            view.printError("Reservation ID " + reservationId + " not found in host's future reservations list");
+            return;
+        }
+
+        Result<Reservation> cancelResult = reservationService.cancel(cancelReservation);
+        view.displayReservation(cancelResult, "canceled");
 
     }
 }

@@ -84,11 +84,14 @@ public class View {
             }
         } else { // print reservation if successful
 
-            io.println(String.format("\nSuccess! Reservation %s!\n", action));
+            io.println(String.format("\nSuccess! Reservation %s!", action));
 
+            if (action.equalsIgnoreCase("canceled")) {
+                return;
+            }
             Reservation reservation = result.getPayload();
 
-            io.println(String.format("ID: %s, Dates: %s - %s, Guest: %s %s (%s), Total: $%s",
+            io.println(String.format("\nID: %s, Dates: %s - %s, Guest: %s %s (%s), Total: $%s",
                     reservation.getId(),
                     reservation.getStartDate().toString(),
                     reservation.getEndDate().toString(),
@@ -110,6 +113,16 @@ public class View {
         }
 
         return email;
+    }
+
+    public int getReservationId() {
+        int id = io.readInt("\nEnter reservation ID to cancel: ");
+        return id;
+    }
+
+    public void printError(String message) {
+        io.println("[ERROR]");
+        io.println(message);
     }
 
     public Reservation makeReservation(Host host, Guest guest) {
