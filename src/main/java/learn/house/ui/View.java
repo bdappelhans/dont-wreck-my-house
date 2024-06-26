@@ -102,6 +102,23 @@ public class View {
         }
     }
 
+    public void displayReservation(Reservation reservation) {
+        io.println(String.format("\nID: %s, Dates: %s - %s, Guest: %s %s (%s), Total: $%s",
+                reservation.getId(),
+                reservation.getStartDate().toString(),
+                reservation.getEndDate().toString(),
+                reservation.getGuest().getFirstName(),
+                reservation.getGuest().getLastName(),
+                reservation.getGuest().getEmail(),
+                reservation.getTotal().toString()));
+    }
+
+    public boolean confirm(String action) {
+        String response = io.readString("Confirm " + action + " [press y to confirm, or any other key to return to menu]: ");
+
+        return response.equalsIgnoreCase("y");
+    }
+
     public String getEmail(String emailType) {
         String email = io.readRequiredString(String.format("Enter %s email: ", emailType));
 

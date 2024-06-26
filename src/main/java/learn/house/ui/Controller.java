@@ -154,6 +154,13 @@ public class Controller {
             return;
         }
 
+        view.displayReservation(cancelReservation);
+
+        // if user doesn't confirm delete, return to main method
+        if (!view.confirm("delete")) {
+            return;
+        }
+
         Result<Reservation> cancelResult = reservationService.cancel(cancelReservation);
         view.displayReservation(cancelResult, "canceled");
 
