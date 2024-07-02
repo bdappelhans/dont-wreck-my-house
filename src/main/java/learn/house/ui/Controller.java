@@ -109,7 +109,26 @@ public class Controller {
         view.displayReservation(result, "added");
     }
 
-    private void editReservation() {
+    private void editReservation() throws DataException {
+        view.displayHeader("Edit a Reservation");
+
+        String hostEmail = view.getEmail("host");
+        Result<Host> hostResult = hostService.findByEmail(hostEmail);
+
+        if (!hostResult.isSuccess()) {
+            view.displayError(hostResult);
+            return;
+        }
+
+        Host host = hostResult.getPayload();
+        Result<List<Reservation>> currentReservationsResult = reservationService.findCurrentAndFutureReservationsByHost(host);
+
+        view.displayHeader(String.format("Current and Future Reservations for %s / %s: %s, %s", host.getEmail(),
+                host.getLastName(), host.getCity(), host.getState()));
+
+        view.displayReservations(currentReservationsResult);
+        System.out.println();
+
 
     }
 
